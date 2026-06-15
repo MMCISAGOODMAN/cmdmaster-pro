@@ -1,237 +1,221 @@
-# cmdmaster-pro / cmdmaster-pro
+# cmdmaster-pro
 
-🎯 **智能运维工具箱** | **Intelligent Operations Toolkit** - 让每个人都能享受 AI 辅助的命令行体验 | Let everyone enjoy AI-assisted command line experience
+智能运维工具箱 — 用自然语言生成 Shell 命令的 CLI 工具。
 
-## ✨ 特性 | Features
+Intelligent Operations Toolkit — a CLI that turns natural language into shell commands.
 
-- 🤖 **AI 驱动 | AI-Driven**: 支持多种大模型（OpenAI、DeepSeek、火山引擎等） Support for multiple large models (OpenAI, DeepSeek, VolcEngine, etc.)
-- 🔧 **命令生成 | Command Generation**: 智能生成 Linux/Unix 命令 Intelligently generate Linux/Unix commands
-- 📝 **Git 支持 | Git Support**: 完整的 Git 命令生成 Complete Git command generation
-- 🧠 **本地引擎 | Local Engine**: 内置专家知识库，无需网络也可使用 Built-in expert knowledge base, can be used without internet
-- 📚 **历史记忆 | History Memory**: 智能补全和历史记录 Smart completion and history
-- ⚙️ **灵活配置 | Flexible Configuration**: 支持自定义 AI 模型配置 Support for custom AI model configuration
-- 🆓 **完全开源 | Fully Open Source**: 无商业限制，用户自主配置 No commercial restrictions, user-configurable
+[![Tests](https://github.com/MMCISAGOODMAN/cmdmaster-pro/actions/workflows/test.yml/badge.svg)](https://github.com/MMCISAGOODMAN/cmdmaster-pro/actions/workflows/test.yml)
 
-## 🚀 快速开始 | Quick Start
+## 特性
 
-### 安装 | Installation
+- **双引擎**：本地专家引擎 + 云端 AI，自动降级
+- **中英双语**：本地引擎支持中文关键词（如「查看CPU使用率」）
+- **平台适配**：macOS / Linux 命令自动区分
+- **安全机制**：危险命令拦截、风险分级、执行前确认
+- **开箱即用**：历史记忆、收藏夹、用户模板、结果缓存
+- **脚本友好**：`--json` 输出，便于集成到自动化流程
+
+## 安装
 
 ```bash
-pip install requests
+git clone https://github.com/MMCISAGOODMAN/cmdmaster-pro.git
+cd cmdmaster-pro
 pip install -e .
 ```
 
-### 配置 AI 模型 | Configure AI Model
+要求 Python 3.6+，依赖仅 `requests`。
+
+## 快速上手
 
 ```bash
-# 配置 OpenAI | Configure OpenAI
-cmdmaster-pro --set-ai-url "https://api.openai.com/v1/chat/completions"
-cmdmaster-pro --set-ai-token "your-openai-key"
-cmdmaster-pro --set-ai-model "gpt-3.5-turbo"
+# 生成命令
+cmdmaster-pro "查看磁盘空间"
+cmdmaster-pro "commit提交代码"
 
-# 查看配置 | View configuration
+# 交互模式
+cmdmaster-pro -i
+
+# 生成并执行（需确认）
+cmdmaster-pro -x "查看CPU使用率"
+
+# 离线模式（不调用 AI）
+cmdmaster-pro -L "push代码到远程"
+
+# JSON 输出（脚本集成）
+cmdmaster-pro --json "查看端口占用"
+
+# 解释已有命令
+cmdmaster-pro -d "git reset --hard"
+```
+
+## 配置 AI
+
+优先级：**环境变量** > `~/.config/cmdmaster-pro/ai_config.py`
+
+```bash
+# 命令行配置
+cmdmaster-pro --set-ai-url "https://api.openai.com/v1/chat/completions"
+cmdmaster-pro --set-ai-token "your-api-key"
+cmdmaster-pro --set-ai-model "gpt-3.5-turbo"
 cmdmaster-pro --ai-config
 ```
 
-### 使用示例 | Usage Examples
-
 ```bash
-# Git 命令 | Git commands
-cmdmaster-pro "commit提交代码"  # 或 | or: cmdmaster-pro "commit code"
-# 输出 | Output: git add . && git commit -m '<提交信息>' | '<commit message>'
-
-# 系统管理 | System management
-cmdmaster-pro "查看CPU使用率"  # 或 | or: cmdmaster-pro "check CPU usage"
-# 输出 | Output: top -bn1 | grep Cpu
-
-# 复杂任务 | Complex tasks
-cmdmaster-pro "创建一个Python爬虫脚本"  # 或 | or: cmdmaster-pro "create a Python web scraper"
-# 输出 | Output: AI 生成的复杂命令 | AI-generated complex commands
-```
-
-## 📖 详细文档 | Detailed Documentation
-
-### 配置指南 | Configuration Guide
-
-cmdmaster-pro 支持多种大模型 API，你可以通过修改 `ai_config.py` 文件或命令行来配置使用不同的大模型服务。
-
-cmdmaster-pro supports multiple large model APIs. You can configure different large model services by modifying the `ai_config.py` file or using command line.
-
-#### 支持的 AI 服务 | Supported AI Services
-
-| 模型 | Model | URL | 说明 | Description |
-|------|-------|-----|------|-------------|
-| OpenAI | OpenAI | `https://api.openai.com/v1/chat/completions` | GPT-3.5, GPT-4 等 | GPT-3.5, GPT-4, etc. |
-| DeepSeek | DeepSeek | `https://api.deepseek.com/v1/chat/completions` | DeepSeek Chat | DeepSeek Chat |
-| 火山引擎 | VolcEngine | `https://ark.cn-beijing.volces.com/api/v3/responses` | Doubao 系列 | Doubao series |
-| 自定义 | Custom | 任意兼容 API | 自定义大模型 | Custom large models |
-
-#### 配置方法 | Configuration Methods
-
-##### 方法1: 命令行配置（推荐）| Method 1: Command Line Configuration (Recommended)
-
-```bash
-cmdmaster-pro --set-ai-url "your-api-url"
-cmdmaster-pro --set-ai-token "your-api-key"
-cmdmaster-pro --set-ai-model "your-model-name"
-```
-
-##### 方法2: 配置文件 | Method 2: Configuration File
-
-编辑 `ai_config.py` 文件：| Edit the `ai_config.py` file:
-
-```python
-AI_URL = "https://api.openai.com/v1/chat/completions"
-AI_TOKEN = "your-api-key"
-AI_MODEL = "gpt-3.5-turbo"
-```
-
-### 常用命令示例 | Common Command Examples
-
-#### Git 操作 | Git Operations
-```bash
-cmdmaster-pro "commit提交代码"  # 或 | or: "commit code"
-cmdmaster-pro "push代码到远程"  # 或 | or: "push code to remote"
-cmdmaster-pro "创建新分支"     # 或 | or: "create new branch"
-cmdmaster-pro "合并分支"       # 或 | or: "merge branch"
-```
-
-#### 系统管理 | System Management
-```bash
-cmdmaster-pro "查看CPU使用率"  # 或 | or: "check CPU usage"
-cmdmaster-pro "查看磁盘空间"  # 或 | or: "check disk space"
-cmdmaster-pro "查看端口占用"  # 或 | or: "check port usage"
-cmdmaster-pro "查看内存使用"  # 或 | or: "check memory usage"
-```
-
-#### 文件操作 | File Operations
-```bash
-cmdmaster-pro "查找大文件"     # 或 | or: "find large files"
-cmdmaster-pro "批量重命名文件" # 或 | or: "batch rename files"
-cmdmaster-pro "压缩目录"       # 或 | or: "compress directory"
-```
-
-### 功能特点 | Features
-
-#### 双引擎架构 | Dual Engine Architecture
-- **本地专家引擎 | Local Expert Engine**: 内置丰富的命令知识库，无需网络即可使用 Built-in rich command knowledge base, can be used without internet
-- **云端 AI 引擎 | Cloud AI Engine**: 支持多种大模型，提供更智能的命令生成 Support for multiple large models, providing smarter command generation
-- **智能切换 | Smart Switching**: 云端不可用时自动回退到本地引擎 Automatically fallback to local engine when cloud is unavailable
-
-#### 智能补全 | Smart Completion
-- **历史记忆 | History Memory**: 自动保存最近 30 条命令 Automatically saves last 30 commands
-- **智能推荐 | Smart Recommendations**: 基于历史记录和内置知识库 Based on history and built-in knowledge base
-- **实时补全 | Real-time Completion**: 输入时实时显示相关建议 Real-time display of relevant suggestions
-
-#### 安全特性 | Security Features
-- **危险命令拦截 | Dangerous Command Interception**: 自动检测和拦截危险操作 Automatically detect and intercept dangerous operations
-- **安全提示 | Safety Warnings**: 对谨慎操作提供安全提示 Provide safety warnings for cautious operations
-- **用户确认 | User Confirmation**: 对高风险操作要求用户确认 Require user confirmation for high-risk operations
-
-## 🛠️ 高级配置 | Advanced Configuration
-
-### 环境变量配置 | Environment Variable Configuration
-
-对于生产环境，建议使用环境变量存储敏感信息：
-
-For production environments, it's recommended to use environment variables to store sensitive information:
-
-```bash
+# 环境变量（推荐用于生产环境）
 export CMDMASTER_AI_URL="https://api.openai.com/v1/chat/completions"
 export CMDMASTER_AI_TOKEN="your-api-key"
 export CMDMASTER_AI_MODEL="gpt-3.5-turbo"
 ```
 
-### 自定义命令模板 | Custom Command Templates
-
-你可以通过编辑本地引擎来添加自定义命令模板：
-
-You can add custom command templates by editing the local engine:
-
-```python
-# 在 cmdmaster/cli.py 中的 command_templates 字典添加 | Add to command_templates dictionary in cmdmaster/cli.py
-command_templates = {
-    "my-custom-command": "your-custom-shell-command",
-    # ... 其他命令 | ... other commands
-}
+```bash
+# 配置文件
+mkdir -p ~/.config/cmdmaster-pro
+cp examples/ai_config.example.py ~/.config/cmdmaster-pro/ai_config.py
+# 编辑 ai_config.py 填入你的 API 信息
 ```
 
-## 🔧 故障排除 | Troubleshooting
+### 支持的 AI 服务
 
-### 命令无法识别 | Commands Not Recognized
-- 尝试更具体的描述 | Try more specific descriptions
-- 查看历史记录获取类似命令 | Check history for similar commands
-- 使用本地 AI 引擎的建议 | Use suggestions from local AI engine
+| 服务 | API URL |
+|------|---------|
+| OpenAI | `https://api.openai.com/v1/chat/completions` |
+| DeepSeek | `https://api.deepseek.com/v1/chat/completions` |
+| 火山引擎 | `https://ark.cn-beijing.volces.com/api/v3/responses` |
+| 自定义 | 任意 OpenAI 兼容 API |
 
-### AI 服务不可用 | AI Service Unavailable
-- 检查网络连接 | Check network connection
-- 验证 API Token 是否正确 | Verify API Token is correct
-- 系统会自动回退到本地引擎 | System will automatically fallback to local engine
+## CLI 参考
 
-### 安装问题 | Installation Issues
-- 确保已安装 requests 依赖 | Ensure requests dependency is installed
-- 检查 Python 版本 (需要 Python 3.6+) | Check Python version (requires Python 3.6+)
-- 查看详细错误信息 | Check detailed error messages
+| 选项 | 说明 |
+|------|------|
+| `-i, --interactive` | 交互模式 |
+| `-L, --local-only` | 仅使用本地引擎 |
+| `-x, --run` | 生成后执行命令 |
+| `-c, --copy` | 复制命令到剪贴板 |
+| `-d, --decode` | 解释 shell 命令含义 |
+| `-e, --explain` | 显示生成说明 |
+| `-y, --yes` | 跳过危险操作确认 |
+| `-n, --dry-run` | 只生成，不直接执行输入的命令 |
+| `--json` | JSON 格式输出 |
+| `--no-color` | 禁用终端颜色 |
+| `--no-cache` | 跳过结果缓存 |
+| `--search QUERY` | 搜索历史 |
+| `--suggest [PREFIX]` | 显示智能建议 |
+| `--favorite list/add/remove` | 管理收藏夹 |
+| `--template list/add/remove` | 管理用户模板 |
+| `--export-history FILE` | 导出历史 |
+| `--import-history FILE` | 导入历史 |
+| `--clear-history` | 清空历史 |
+| `--clear-cache` | 清空缓存 |
+| `--completion bash/zsh` | 输出 Shell 补全脚本 |
+| `--stdin` | 从标准输入读取查询 |
+| `-V, --version` | 显示版本 |
 
-## 🆓 开源优势 | Open Source Advantages
+### 交互模式内置命令
 
-- ✅ **完全免费 | Completely Free**: 无商业限制 No commercial restrictions
-- ✅ **用户自主 | User Controlled**: 自己配置 AI 模型 Configure your own AI models
-- ✅ **数据安全 | Data Security**: 无数据收集 No data collection
-- ✅ **灵活扩展 | Flexible Extension**: 模块化设计 Modular design
-- ✅ **社区支持 | Community Support**: 开放源代码 Open source code
+```
+:help              显示帮助
+:history           查看历史
+:search <text>     搜索历史
+:suggest [prefix]  显示建议（!1..!9 快速选择）
+:favorite add/list/rm
+:template list
+:local on|off      切换离线模式
+:clear-cache       清除缓存
+exit               退出
+```
 
-## 📊 项目状态 | Project Status
+### Shell 补全
 
-- **代码质量 | Code Quality**: ✅ Good
-- **依赖关系 | Dependencies**: ✅ Resolved
-- **安装运行 | Installation**: ✅ Working
-- **基础功能 | Basic Functionality**: ✅ Working
-- **文档完整 | Documentation**: ✅ Complete
-- **测试覆盖 | Testing**: ✅ Passed
+```bash
+# Bash
+eval "$(cmdmaster-pro --completion bash)"
 
-**总体状态 | Overall Status**: ✅ PROJECT READY FOR PRODUCTION
+# Zsh
+eval "$(cmdmaster-pro --completion zsh)"
+```
 
-## 🤝 贡献 | Contributing
+## 用户模板
 
-欢迎提交 Issue 和 Pull Request！
+将常用关键词映射到固定命令，保存在 `~/.config/cmdmaster-pro/templates.json`。
 
-Welcome to submit Issues and Pull Requests!
+```bash
+# CLI 添加
+cmdmaster-pro --template add "deploy prod" "kubectl rollout restart app -n prod"
 
-1. Fork 项目 | Fork the project
-2. 创建特性分支 | Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 | Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. 推送分支 | Push to branch (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request | Open Pull Request
+# 或复制示例文件
+cp examples/templates.example.json ~/.config/cmdmaster-pro/templates.json
+```
 
-## 📄 许可证 | License
+## 数据文件
 
-MIT License - 详见 | See details in [LICENSE](LICENSE) 文件 | file
+| 文件 | 用途 |
+|------|------|
+| `~/.cmdmaster-pro.history` | 查询历史（最近 30 条） |
+| `~/.cmdmaster-pro.favorites` | 收藏夹 |
+| `~/.config/cmdmaster-pro/ai_config.py` | AI 配置 |
+| `~/.config/cmdmaster-pro/templates.json` | 用户模板 |
+| `~/.config/cmdmaster-pro/cache.json` | 结果缓存（24 小时 TTL） |
 
-## 🌟 致谢 | Acknowledgments
+## 项目结构
 
-感谢以下开源项目和技术：
+```
+cmdmaster-pro/
+├── cmdmaster/           # 核心包
+│   ├── cli.py           # CLI 入口
+│   ├── engines.py       # 本地引擎
+│   ├── api.py           # 云端 AI
+│   ├── config.py        # 配置管理
+│   ├── safety.py        # 安全检测
+│   ├── history.py       # 历史与建议
+│   ├── favorites.py     # 收藏夹
+│   ├── templates.py     # 用户模板
+│   ├── cache.py         # 结果缓存
+│   ├── explain.py       # 命令解释
+│   └── ...
+├── tests/               # 单元测试
+├── examples/            # 配置示例
+├── pyproject.toml
+└── LICENSE
+```
 
-Thanks to the following open source projects and technologies:
+## 开发与测试
 
-- [OpenAI](https://openai.com/) - GPT 模型 | GPT models
-- [requests](https://docs.python-requests.org/) - HTTP 库 | HTTP library
-- [Python](https://python.org/) - 编程语言 | Programming language
+```bash
+pip install -e .
+python -m unittest discover -s tests -v
+```
 
----
+CI 在 push/PR 时于 Ubuntu 和 macOS 上运行测试（Python 3.9 / 3.12）。
 
-**让 AI 成为你的命令行助手 | Let AI be your command line assistant** 🚀
+## 架构
 
-## 📞 联系方式 | Contact
+```
+用户输入
+  ├─ 用户模板匹配
+  ├─ 本地专家引擎（关键词规则）
+  ├─ 结果缓存
+  ├─ 云端 AI（含平台/目录上下文）
+  └─ 本地 AI 降级引擎
+```
 
-如有问题或建议，请通过以下方式联系我们：
+## 故障排除
 
-For questions or suggestions, please contact us:
+| 问题 | 解决方案 |
+|------|----------|
+| 命令不准确 | 使用更具体的描述，或添加用户模板 |
+| AI 不可用 | 检查 Token 和网络；自动降级到本地引擎 |
+| 无 AI 配置 | 使用 `-L` 离线模式，或配置 API Token |
+| 安装失败 | 确认 Python 3.6+，运行 `pip install -e .` |
 
-- 提交 Issue | Submit Issue
-- 发送邮件 | Send email
-- 项目讨论 | Project discussions
+## 贡献
 
----
+欢迎提交 Issue 和 Pull Request。
 
-*此项目完全开源，欢迎使用和贡献 | This project is completely open source, welcome to use and contribute* 🎉
+1. Fork 本仓库
+2. 创建特性分支：`git checkout -b feature/my-feature`
+3. 提交更改并确保测试通过
+4. 发起 Pull Request
+
+## 许可证
+
+[MIT License](LICENSE)

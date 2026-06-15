@@ -1,0 +1,5 @@
+{
+  "deploy prod": "kubectl rollout restart deployment/my-app -n production",
+  "重启redis": "sudo systemctl restart redis",
+  "查看测试环境日志": "kubectl logs -f deployment/api -n staging --tail=100"
+}

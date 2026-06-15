@@ -1,55 +1,34 @@
+# OS
 .DS_Store
 Thumbs.db
 
+# IDE
 .idea/
-*.iml
-*.ipr
-*.iws
 .vscode/
+*.iml
 *.swp
 *.swo
+.claude/
 
-*.log
-logs/
-*.out
-*.class
-*.jar
-*.war
-*.ear
-
-# Maven
-
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-
-# Gradle
-
-.gradle/
-build/
-
-**pycache**/
-*.pyc
-*.pyo
-*.pyd
-
-venv/
-.env/
-.venv/
-
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
 dist/
 build/
-*.egg-info/
+.venv/
+venv/
 
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
 
-.env
-.env.*
+# User config (contains secrets)
+ai_config.py
+
+# Logs & temp
+*.log
 tmp/
 temp/
 *.tmp
-
